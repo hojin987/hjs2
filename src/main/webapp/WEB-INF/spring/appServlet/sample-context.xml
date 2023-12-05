@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- <bean id="myChef" class="sample.less01.Chef"/>
+
+<bean id="yourChef" class="sample.less01.Chef">
+	<property name="cname" value="이순신"/>
+	<property name="cid">
+		<value>슈퍼맨</value>
+	</property>
+</bean>
+
+<bean id="hisChef" class="sample.less01.Chef">
+	<constructor-arg value="홍길동"/>
+	<constructor-arg value="12345"/>
+</bean> -->
+
+<context:component-scan base-package="sample.less01"/>
+
+<bean id="yourChef" class="sample.less01.Chef">
+	<property name="cname" value="이순신"/>
+	<property name="cid">
+		<value>슈퍼맨</value>
+	</property>
+</bean>
+
+<bean id="myRestaurant" class="sample.less01.Restaurant">
+	<property name="name" value="베트맨"/>
+	<property name="chef" ref="yourChef"/>
+</bean>
+
+
+
+
+</beans>
