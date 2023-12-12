@@ -60,7 +60,7 @@
 		WHERE bno = #{bno}
 	</select>
 	
-<!-- 게시물 수정(READ) -->
+<!-- 게시물 수정(UPDATE) -->
 	<update id="updateMyBoard" parameterType="com.spring5.mypro00.domain.MyBoardVO">
 		UPDATE book_ex.tbl_myboard
 		SET btitle = #{btitle},
@@ -69,11 +69,18 @@
 		WHERE bno = #{bno}
 	</update>
 	
-<!-- 게시물 삭제(READ) -->
+<!-- 게시물 삭제(DELETE) -->
 	<delete id="deleteMyboard" parameterType="long">
 		DELETE FROM book_ex.tbl_myboard
 		WHERE bno = #{bno}
 	</delete>
+	
+<!-- 게시물 삭제요청(bdelFlag를 1로 업데이트) -->
+	<update id="updateBdelFlag" parameterType="long">
+		UPDATE book_ex.tbl_myboard
+		SET bdelFlag = 1
+		WHERE bno = #{bno}
+	</update>
 	
 	<!-- 특정 게시물 조회수 증가 -->
 	<update id="updateBviewCnt">
@@ -85,6 +92,7 @@
    	<!-- 게시물 총 개수 조회(페이징) 삭제 요청된 행 포함 -->
 	<select id="selectRowTotal" resultType="long">
 		SELECT COUNT(*) rowTotal FROM book_ex.tbl_myboard
+		<!-- WHERE bregdate BETWEEN #{startDate} AND #{endDate} -->
 	</select>   
 	
 	<!-- 게시물 목록조회(페이징)2-->
@@ -117,6 +125,12 @@
 					</choose>
 					</if>
 				   </where>
+				   <if test="(startDate != null or startDate !='') and (endDate != null or endDate !='')">
+				   <![CDATA[
+			   		bregdate BETWEEN #{startDate}
+			   				AND #{endDate} AND 
+			   		]]>
+			</if>
 		<![CDATA[
 			      )
 		
@@ -134,6 +148,7 @@
 			      WHERE 
 			]]>    
 			
+			<if test="(scope != null and scope != '') and (keyword != null and keyword != '')">
 			<trim prefix="(" suffix=") AND" prefixOverrides="OR">
 			   <foreach item='scope' collection="scopeArray">
 			      <trim prefix="OR">
@@ -144,10 +159,16 @@
 			         </choose>
 			      </trim> 
 			   </foreach>
-			</trim>    
+			</trim>
+			</if>
+			
+			<if test="(startDate != null and startDate != '') and (endDate != null and endDate != '')">
+			   bregdate BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') AND TO_DATE(#{endDate}, 'yyyy-MM-dd') AND 
+			</if>
 			
 			<![CDATA[
-			      rownum <= (#{pageNum} * #{rowAmountPerPage})
+			      rownum <= (#{pageNum} * #{rowAmountPerPage}) 
+			      
 			      )
 			WHERE rn >= ((#{pageNum} * #{rowAmountPerPage}) - (#{rowAmountPerPage} - 1))
 		]]>

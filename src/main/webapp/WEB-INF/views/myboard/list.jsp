@@ -53,6 +53,10 @@
             			<option value="TCW"${(pagingCreator.myboardPaging.scope == "TCW") ? "selected" : ""}>제목+내용+작성자</option>
             		</select>
             		
+            		<!-- 날짜기간 조회 input -->
+					<input type="Date" id="startDate" name="startDate" value='<c:out value="${pagingCreator.myboardPaging.startDate}" />'/>
+					<input type="Date" id="endDate" name="endDate" value='<c:out value="${pagingCreator.myboardPaging.endDate}"/>'/>
+            		
             		<div class="input-group"><!-- 검색어 입력 -->
 					   <input class="form-control" id="keyword" name="keyword" type="text" placeholder="검색어를 입력하세요"
 					         value='<c:out value="${pagingCreator.myboardPaging.keyword}" />' />
@@ -63,16 +67,18 @@
 					   </span>
 					</div>
 					
+				
+					
 					<div class="input-group"><!-- 검색 초기화 버튼 -->
 			         	<button id="btnReset" class="btn btn-info" type="button">Reset</button>
 			      	</div> 
-					
             		
 					<input type="hidden" id="pageNum" name="pageNum" value="${pagingCreator.myboardPaging.pageNum}"><%-- 
 					<input type="hidden" id="rowAmountPerPage" name="rowAmountPerPage" value="${pagingCreator.myboardPaging.rowAmountPerPage}"> --%>
 					<input type="hidden" id="lastPageNum" name="lastPageNum" value="${pagingCreator.lastPageNum}">
 				</div>
-			</form>
+			</form><!-- form태그!!! -->
+			
             <hr>
                 <table class="table table-striped table-bordered table-hover" 
                 	   style="width:100; text-align:center;">
@@ -90,15 +96,25 @@
                     	<c:choose>
                     	<c:when test="${not empty pagingCreator.myboardList}">
 	                    	<c:forEach var="myboard" items="${pagingCreator.myboardList}">
-	                        <tr class="moveDetail" data-bno='<c:out value="${myboard.bno}"/>' >
-	                            <td><c:out value="${myboard.bno }"/></td>
-	                       <%-- <td style="text-align:left"><a href="${contextPath}/myboard/detail?bno=${myboard.bno}">${myboard.btitle }</a></td> --%>
-	                            <td style="text-align:left">${myboard.btitle}</td>
-	                            <td>${myboard.bwriter }</td>
-	                            <td class="center"><fmt:formatDate value="${myboard.bregDate }" pattern="yyyy/MM/dd HH:mm:ss"/></td>
-	                            <td class="center"><fmt:formatDate value="${myboard.bmodDate }" pattern="yyyy/MM/dd HH:mm:ss"/></td>
-	                            <td class="center"><c:out value="${myboard.bviewCnt }"/></td>
-	                        </tr>
+	                        <c:choose>
+	                        	<c:when test="${myboard.bdelFlag == 1}">
+	                        		<tr style="background-color: Moccasin; text-align: center">
+						             	<td>${myboard.bno }</td>
+						             	<td colspan="6"><em>작성자에 의해서 삭제된 게시글입니다.</em></td>
+						         	</tr>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		<tr class="moveDetail" data-bno='<c:out value="${myboard.bno}"/>' >
+			                            <td><c:out value="${myboard.bno }"/></td>
+			                       <%-- <td style="text-align:left"><a href="${contextPath}/myboard/detail?bno=${myboard.bno}">${myboard.btitle }</a></td> --%>
+			                            <td style="text-align:left">${myboard.btitle}</td>
+			                            <td>${myboard.bwriter }</td>
+			                            <td class="center"><fmt:formatDate value="${myboard.bregDate }" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+			                            <td class="center"><fmt:formatDate value="${myboard.bmodDate }" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+			                            <td class="center"><c:out value="${myboard.bviewCnt }"/></td>
+			                        </tr>
+	                        	</c:otherwise>
+	                        </c:choose>
 	                        </c:forEach>
                         </c:when>
                         <c:otherwise>
@@ -199,6 +215,7 @@ $(".moveDetail").on("click", function(){
 	frmSendValue.append("<input type='hidden' name='bno' value=' " + bno + " '/>");
 	frmSendValue.attr("action", "${contextPath}/myboard/detail").attr("method", "get");
 	frmSendValue.submit();
+	frmSendValue.find('input[name="bno"]').remove();
 
 })
 
@@ -263,21 +280,23 @@ $("#selectAmount").on("change",function(){
 $("#btnSearchGo").on("click", function(){
 	
 	var scope = $("#selectScope").find("option:selected").val();
+	var keyword = $("#keyword").val();
+	/* var startDate = document.getElementById("startDate").value;
+	var endDate = document.getElementById("endDate").value; */
 	
 	if (!scope || scope == ""){
 		alert("검색 범위를 설정하세요");
 		return false;
 	}
 	
-	var keyword = $("#keyword").val();
-	
 	if(!keyword || keyword.length == 0){
 		alert("검색어를 입력하세요");
 		return false;
-	}
+	} 
 	
 	frmSendValue.find("input[name='pageNum']").val(1);
 	frmSendValue.submit();
+	
 	
 })
 

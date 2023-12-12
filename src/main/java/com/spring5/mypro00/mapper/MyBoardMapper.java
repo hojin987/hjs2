@@ -22,6 +22,9 @@ public interface MyBoardMapper {
 	
 	//게시물 내용 수정(UPDATE)
 	public int updateMyBoard(MyBoardVO myBoard);
+	
+	//게시물 내용 수정(UPDATE)
+	public int updateBdelFlag(long bno);
 		
 	//게시물 삭제(DELETE)
 	public int deleteMyboard(long bno);

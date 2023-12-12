@@ -130,6 +130,8 @@ public class MyBoardController {
 		redirectAttr.addAttribute("bno", myboard.getBno());
 		redirectAttr.addAttribute("pageNum", myboardPaging.getPageNum());
 		redirectAttr.addAttribute("rowAmountPerPage", myboardPaging.getRowAmountPerPage());
+		redirectAttr.addAttribute("scope", myboardPaging.getScope());
+		redirectAttr.addAttribute("keyword", myboardPaging.getKeyword());
 		
 		//flashAttribute를 먼저 달고 addAttribute 해야한다.
 		
@@ -141,8 +143,9 @@ public class MyBoardController {
 	public String removeBoard(Long bno, RedirectAttributes redirectAttr,
 							  MyBoardPagingDTO myboardPaging) {
 		
-		boolean removeResult = myBoardService.removeBoard(bno);
-		
+		boolean removeResult = myBoardService.modifyBdelFalg(bno);
+
+//		if(removeResult) {
 		if(removeResult) {
 			redirectAttr.addFlashAttribute("result", "successRemove");
 		}else {
@@ -151,6 +154,8 @@ public class MyBoardController {
 		
 		redirectAttr.addAttribute("pageNum", myboardPaging.getPageNum());
 		redirectAttr.addAttribute("rowAmountPerPage", myboardPaging.getRowAmountPerPage());
+		redirectAttr.addAttribute("scope", myboardPaging.getScope());
+		redirectAttr.addAttribute("keyword", myboardPaging.getKeyword());
 		
 		return "redirect:/myboard/list";
 	}

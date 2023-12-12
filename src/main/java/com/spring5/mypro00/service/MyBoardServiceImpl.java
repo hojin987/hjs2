@@ -1,5 +1,9 @@
 package com.spring5.mypro00.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -43,13 +47,35 @@ public class MyBoardServiceImpl implements MyBoardService {
 	
 	@Override
 	public MyBoardPagingCreatorDTO getBoardList(MyBoardPagingDTO myboardPaging) {
+		String startDate = myboardPaging.getStartDate();
+		String endDate = myboardPaging.getEndDate();
+		
+		if((startDate != null && startDate.length() != 0) && (endDate != null && endDate.length() != 0)) {
+//			myboardPaging.set_endDate(endDate);
+			SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date date = myFormat.parse(endDate);
+				
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				cal.add(Calendar.DATE, 1);
+				
+				endDate = myFormat.format(cal.getTime());
+				System.out.println("endDate: " + endDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			myboardPaging.setEndDate(endDate);
+			
+		}
 		
 		List<MyBoardVO> myboardList = myBoardMapper.selectMyBoardList(myboardPaging);
 		
 		long rowTotal = myBoardMapper.selectRowTotal(myboardPaging);
 		
 		MyBoardPagingCreatorDTO pagingCreator = new MyBoardPagingCreatorDTO(rowTotal, myboardPaging, myboardList);
-		
+
 		return pagingCreator;
 	}
 	
@@ -90,6 +116,14 @@ public class MyBoardServiceImpl implements MyBoardService {
 	public boolean removeBoard(long bno) {
 		
 		int rows = myBoardMapper.deleteMyboard(bno);
+		
+		return (rows == 1) ;
+	}
+	
+	@Override
+	public boolean modifyBdelFalg(long bno) {
+		
+		int rows = myBoardMapper.updateBdelFlag(bno);
 		
 		return (rows == 1) ;
 	}

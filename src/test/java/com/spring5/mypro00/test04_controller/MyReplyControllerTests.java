@@ -1,6 +1,7 @@
 package com.spring5.mypro00.test04_controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import org.junit.Before;
@@ -14,21 +15,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.google.gson.Gson;
+import com.spring5.mypro00.domain.MyReplyVO;
+
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 //테스트 메소드를 실행하는 어노테이션
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration  //DispatcherServlet의 구성설정파일을 사용하여 컨트롤러를 테스트하기 위해 필요한 설정 
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/mybatis-context.xml",
+@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/mybatis-contextDEV.xml",
                        "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
 @Log4j
 public class MyReplyControllerTests {
-	//Log4j 롬복 어노테이션을 사용하지 않는 경우, 다음처럼 로그 객체를 직접 호출해야 합니다.
-    //private static final Logger log = LoggerFactory.getLogger(MyReplyControllerTests.class);
-
-	//테스트 환경 구성
-    //컨트롤러 테스트를 위해서는 WebApplicationContext를 객체(웹 컨텍스트 객체)로 주입 받아야 합니다.
+//	//Log4j 롬복 어노테이션을 사용하지 않는 경우, 다음처럼 로그 객체를 직접 호출해야 합니다.
+//    //private static final Logger log = LoggerFactory.getLogger(MyReplyControllerTests.class);
+//
+//	//테스트 환경 구성
+//    //컨트롤러 테스트를 위해서는 WebApplicationContext를 객체(웹 컨텍스트 객체)로 주입 받아야 합니다.
     @Setter(onMethod_ = { @Autowired })
     private WebApplicationContext ctx;
     //테스트 객체를 담을 필드
@@ -45,7 +49,7 @@ public class MyReplyControllerTests {
 //    public void testShowReplyList() throws Exception {
 //
 //        int resultStatus = 
-//            mockMvc.perform(get("/replies/229376/page/1")
+//            mockMvc.perform(get("/replies/229402/page/1")
 //                             //서버가 보낸 것이 JSON 일 때만 처리(컨트롤러의 produces 에 대응)
 //                            .accept("application/json; charset=UTF-8")
 //                             //서버로 보내는 데이터에 대한 인코딩을 UTF-8로 지정
@@ -65,7 +69,7 @@ public class MyReplyControllerTests {
 //        MyReplyVO myReply = new MyReplyVO();
 //        
 //        //myReplyVO에 입력값 지정
-//        myReply.setBno(229404L);
+//        myReply.setBno(229401L);
 //        myReply.setRcontent("컨트롤러-게시물에 대한 댓글 등록 테스트: JSON입력테스트");
 //        myReply.setRwriter("testJson");
 //        
@@ -77,7 +81,7 @@ public class MyReplyControllerTests {
 //        
 //        //ResponseEntiry가 반환하는 상태값을 표시
 //        int resultStatus
-//                = mockMvc.perform(post("/replies/229404/new")
+//                = mockMvc.perform(post("/replies/229401/new")
 //                                    //서버가 보낸 것이 String 일 때만 처리(컨트롤러의 @*Mapping의 produces 속성에 대응)
 //                                   .accept("text/plain; charset=UTF-8")
 //                                    //서버에게 보낼 것이 JSON 임을 header에 명시(컨트롤러의 @*Mapping의 consumes 속성에 대응)
@@ -177,7 +181,7 @@ public class MyReplyControllerTests {
 //    @Test
 //    public void testRemoveReply() throws Exception{
 //        int resultStatus =
-//                mockMvc.perform(delete("/replies/229404/61").accept("text/plain; charset=UTF-8"))
+//                mockMvc.perform(delete("/replies/229402/65").accept("text/plain; charset=UTF-8"))
 //                       .andDo(print())
 //                       .andReturn()
 //                       .getResponse()
@@ -185,7 +189,17 @@ public class MyReplyControllerTests {
 //    	log.info("웹브라우저에 전달되는 ResponseEntiry 객체의 처리 상태 코드(resultStatus): " + resultStatus );
 //    }
 
-
+// 특정 게시물에 대한 모든 댓글 삭제 테스트 메서드 작성
+//	  @Test
+//	  public void testRemoveReply() throws Exception{
+//	      int resultStatus =
+//	              mockMvc.perform(delete("/replies/229401").accept("text/plain; charset=UTF-8"))
+//	                     .andDo(print())
+//	                     .andReturn()
+//	                     .getResponse()
+//	                     .getStatus();    	
+//	  	log.info("웹브라우저에 전달되는 ResponseEntiry 객체의 처리 상태 코드(resultStatus): " + resultStatus );
+//	  }
     
 
 

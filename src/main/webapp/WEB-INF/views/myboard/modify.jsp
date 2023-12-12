@@ -61,7 +61,8 @@
 	
 	<input type="hidden" name="pageNum" value="${myBoardPagingDTO.pageNum}">
 	<input type="hidden" name="rowAmountPerPage" value="${myBoardPagingDTO.rowAmountPerPage}">
-	
+	<input type="hidden" id="scope" name="scope" value="${myBoardPagingDTO.scope}">
+	<input type="hidden" id="keyword" name="keyword" value="${myBoardPagingDTO.keyword}">
 	
 </form>                
                 
@@ -114,11 +115,16 @@ $(".mybtns").on("click", function(){
 		
 		var pageNumInput = $("#pageNum").clone();
 		var rowAmountPerPage = $("#input[name='rowAmountPerPage']").clone();
+		var scopeInput = $("#scpoe").clone() ;
+		var kewordInput = $("#keyword").clone();
 		
 		frmModify.empty();
 		
 		frmModify.append(pageNumInput);
 		frmModify.append(rowAmountPerPage);
+		frmModify.append(scopeInput);
+		frmModify.append(kewordInput);
+		
 		frmModify.attr("action", "${contextPath}/myboard/list").attr("method", "get");
 	}
 	frmModify.submit();

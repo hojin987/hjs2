@@ -1,28 +1,29 @@
 package com.spring5.mypro00.test02_mapper;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.spring5.mypro00.common.paging.domain.MyBoardPagingDTO;
+import com.spring5.mypro00.domain.MyBoardVO;
 import com.spring5.mypro00.mapper.MyBoardMapper;
 
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/mybatis-contextDEV.xml")
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/mybatis-context.xml")
 @Log4j
 public class MyBoardMapperTests {
 	
-//    @Setter(onMethod_ = @Autowired)
-//    private MyBoardMapper myBoardMapper;
-	
-	private MyBoardMapper myBoardMapper ;
-	@Autowired
-	public void setMyBoardMapper(MyBoardMapper myBoardMapper) {
-		this.myBoardMapper = myBoardMapper;
-	}
+    @Setter(onMethod_ = @Autowired)
+    private MyBoardMapper myBoardMapper;
 
 //  //게시물 목록 조회 테스트 <-- 테스트 후 메서드 주석처리
 //  @Test
@@ -64,6 +65,8 @@ public class MyBoardMapperTests {
 
 
 
+  
+  
 //  //게시물 등록 테스트 - selectKey 사용 안함
 //  @Test
 //  public void testInsertMyBoard() {
@@ -75,30 +78,30 @@ public class MyBoardMapperTests {
 //      myBoard.setBwriter("test");
 //      
 //      myBoardMapper.insertMyBoard(myBoard);
-//      myBoardMapper.selectMyBoardList().forEach(_myBoard -> log.info(_myBoard));
+//      log.info(myBoard);
 //  }
 //  
   //게시물 등록 테스트 - selectKey 사용
 //  @Test
 //  public void testInsertMyBoardSelectKey() {
 //
+////	  MyBoardVO myBoard = new MyBoardVO(0L, "메퍼 테스트-select key", "메퍼 테스트-select key", "test", 0, 0, 0, null, null );
 //      MyBoardVO myBoard = new MyBoardVO();
 //      myBoard.setBtitle("메퍼 테스트-select key");
 //      myBoard.setBcontent("매퍼 테스트-select key");
 //      myBoard.setBwriter("test");
 //      
-//      System.out.println("Mapper 처리 전 VO: " + myBoard);
-//      myBoardMapper.insertMyBoard(myBoard);
-//      System.out.println("Mapper 처리 후 VO: " + myBoard);
+//      myBoardMapper.insertMyBoardSelectKey(myBoard);
+//      log.info(myBoard);
 //  }
 
 
 //  //게시물 조회 테스트(by bno)
-  @Test
-  public void testSelectMyBoard() {
-      // 존재하는 게시물 번호로 테스트
-      log.info(myBoardMapper.selectMyBoard(1));
-  }
+//  @Test
+//  public void testSelectMyBoard() {
+//      // 존재하는 게시물 번호로 테스트
+//      log.info(myBoardMapper.selectMyBoard(1));
+//  }
 
 //  //게시물 삭제 요청 테스트 - bdelFlag 컬럼값이 0 -> 1 로 수정만 됨
 //  @Test
@@ -110,8 +113,8 @@ public class MyBoardMapperTests {
 //  //게시물 삭제 테스트 - 실제 특정 게시물이 삭제됨
 //  @Test
 //  public void testDeleteMyBoard() {
-//      log.info("DELETE COUNT: " + myBoardMapper.deleteMyboard(27L));
-//      log.info(myBoardMapper.selectMyBoard(29L));
+//      log.info("DELETE COUNT: " + myBoardMapper.deleteMyBoard(42L));
+//      log.info(myBoardMapper.selectMyBoard(42L));
 //  }
 
 //  //게시물 삭제 테스트 - 삭제 요청된 게시물들 전체 삭제 (관리자)
@@ -124,15 +127,15 @@ public class MyBoardMapperTests {
 //  //게시물 수정 테스트
 //  @Test
 //  public void testUpdateMyBoard() {
-//	  
+////	  MyBoardVO myBoard = new MyBoardVO(1L, "수정된 제목", "수정된 내용", "test", 0, 0, 0, null, null );
 //      MyBoardVO myBoard = new MyBoardVO();
 //      myBoard.setBno(1L);  //실행 전 존재하는 번호인지 확인할 것
 //      myBoard.setBtitle("수정된 제목");
 //      myBoard.setBcontent("수정된 내용");
 //      
 //      log.info("UPDATE COUNT: " + myBoardMapper.updateMyBoard(myBoard));
-////      myBoard = myBoardMapper.selectMyBoard(1L);
-////      System.out.println("수정된 행 값: " + myBoard.toString());
+//      myBoard = myBoardMapper.selectMyBoard(1L);
+//      System.out.println("수정된 행 값: " + myBoard.toString());
 //  }
 
 //  //게시물 조회수 증가 테스트: 3번 수행
@@ -141,10 +144,5 @@ public class MyBoardMapperTests {
 //      myBoardMapper.updateBviewsCnt(1L);
 //      System.out.println("수정된 행 값: " + myBoardMapper.selectMyBoard(1L).toString());
 //  }
-    
-//    @Test
-//    public void testSelectSysdate() {
-//    	log.info(myBoardMapper.selectSysdate());
-//    }
   
 }
