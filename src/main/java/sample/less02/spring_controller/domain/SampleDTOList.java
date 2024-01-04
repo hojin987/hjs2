@@ -12,10 +12,10 @@ import lombok.ToString;
 @ToString
 public class SampleDTOList {
 	
-	private List<SampleDTO> list;
+	private List<SampleDTO> list ;
 	
 	public SampleDTOList() {
-		this.list = new ArrayList<SampleDTO>();
+		this.list = new ArrayList<SampleDTO>() ;
 	}
 
 }

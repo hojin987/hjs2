@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.4.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 사용자 password 암호화 처리 빈: BCrypt 방식 암호화 -->
+<bean id="bCryptPasswordEncoder" 
+	  class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+<!-- 승인/인증을 위해 필요한 데이터를 가져오는 빈(UserDetailsService 타입의 빈) -->
+<bean id="myMemberUserDetailsServiceImpl"  
+	  class="com.spring5.mypro00.common.security.MyMemberUserDetailsServiceImpl"/>
+	  
+<!-- 로그인 성공 시의 처리 로직이 정의된 클래스의 빈 등록 -->	  
+<bean id="myLoginSuccessHandler2" class="com.spring5.mypro00.common.security.MyLoginSuccessHandler2"/>
+
+<bean id="myAccessDeniedHandlerImpl" class="com.spring5.mypro00.common.security.MyAccessDeniedHandlerImpl"/>
+
+
+<!-- 스프링 시큐리티 기능 구성 -->
+<security:http>
+<!-- 
+	<security:csrf /> --><!-- 
+	<security:intercept-url pattern="/" access="permitAll"/>
+	<security:intercept-url pattern="/myboard/list" access="hasAnyAuthority('ROLE_USER','ROLE_MEMBER')"/>
+	<security:intercept-url pattern="/myboard/register" method="GET" access="hasAnyAuthority('ADMIN','MEMBER')"/>
+	<security:intercept-url pattern="/myboard/register" method="POST" access="isAuthenticated()"/> -->
+	
+<!-- 프로젝트에 시큐리티 적용 -->
+<!-- home, 게시물 목록: 인증/승인 검사 없음, 모두 허용,  GET 방식만 -->
+	<security:intercept-url pattern="/" method="GET" access="permitAll"/>
+	<security:intercept-url pattern="/myboard/list" method="GET" access="permitAll"/>
+	
+<!-- 게시물 등록 -->
+	<security:intercept-url pattern="/myboard/register" method="GET" access="isAuthenticated()"/>
+	<security:intercept-url pattern="/myboard/register" method="POST" access="isAuthenticated()"/>
+
+<!-- 게시물 상세 -->
+	<security:intercept-url pattern="/myboard/detail" method="GET" access="permitAll" />
+	
+	
+	<!-- 
+	<security:form-login login-page="/login"/> -->
+	<security:form-login login-page="/myLogin" 
+					     login-processing-url="/myLoginProcess" 
+					     default-target-url="/myboard/detail?bno=1"
+					     authentication-success-handler-ref="myLoginSuccessHandler2"
+					     username-parameter="username"
+					     password-parameter="password"
+					     />
+	
+	<security:logout logout-url="/myLogoutProcess" logout-success-url="/"/>
+	
+	<!-- 스프링 시큐리티 자동로그인: 1주일 유지 -->
+	<!-- Referenced bean 'dataSource' not found 경고는 무시(mybatis-context.xml에 정의되어 있음) -->
+	<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
+	
+	<!-- 접근제한(403(Forbidden_ 오류) 처리 -->
+	<security:access-denied-handler error-page="/accesssForbiddenError"/><!-- 
+	<security:access-denied-handler ref="myAccessDeniedHandlerImpl"/> -->
+	
+</security:http>
+
+
+<!-- 스프링 시큐리티의 승인/인증시 필요한 데이터 확보 -->
+<security:authentication-manager>
+	<security:authentication-provider user-service-ref="myMemberUserDetailsServiceImpl">
+		<security:password-encoder ref="bCryptPasswordEncoder"/>
+	</security:authentication-provider>
+</security:authentication-manager>
+
+</beans>

@@ -14,14 +14,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyReplyVO {
-	private long rno;
-	private String rcontent;
-	private String rwriter;
-	private Date rregDate;
-	private Date rmodDate;
-	private long bno;
-	private long prno;
 	
-	private int rdelFlag;
-	private int lvl;
+	private long rno ;
+	private String rcontent ;
+	private String rwriter ;
+	private Date rRegDate ;
+	private Date rModDate ;
+	private long bno ;
+	private long prno ;
+	private int rdelFlag ;
+	
+	private int lvl ;  //오라클 계층쿼리의 level 값을 저장할 필드
+
 }

@@ -3,8 +3,10 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath }"/>
+
 
 <%@include file="../myinclude/myheader.jsp" %>  
 
@@ -48,13 +50,14 @@
 						</div>
 						<div class="col-md-7" style="height: 45px; padding-top:6px;"><%-- vertical-align: middle; --%>
 							<div class="button-group pull-right">
-							
 
-
-
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.username" var="username"/>
+		<c:if test="${username eq myboard.bwriter}">
 							<button type="button" id="btnToModify" data-oper="modify"
 									class="btn btn-primary"><span>수정페이지로 이동</span></button>
-
+		</c:if>							
+</sec:authorize>
 
 									
 							<button type="button" id="btnToList" data-oper="list"
@@ -89,7 +92,7 @@
 	<input type="hidden" name="rowAmountPerPage" value="${myboardPaging.rowAmountPerPage }" >
 	<input type="hidden" name="scope" value="${myboardPaging.scope }" >
 	<input type="hidden" name="keyword" value="${myboardPaging.keyword }" >
-	<input type="hidden" name="beginDate" value="${myboardPaging.beginDate }" >
+	<input type="hidden" name="startDate" value="${myboardPaging.startDate }" >
 	<input type="hidden" name="endDate" value="${myboardPaging.endDate }" >
 </form>
 
@@ -98,6 +101,74 @@
             </div><%-- /.panel --%>
         </div><%-- /.col-lg-12 --%>
     </div><%-- /.row --%>
+
+<%-- 첨부파일 결과 표시 --%>    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">첨부 파일</div><!-- /.panel-heading -->
+                <div class="panel-body"><!-- 
+                    <div class="form-group uploadDiv">
+                        <input id="inputFile" class="btn btn-primary inputFile" type="file" name="uploadFiles" multiple="multiple" /><br> 
+                    </div>-->
+	                <div class="form-group fileUploadResult">
+	                    <ul>
+<%-- 업로드 후 처리결과가 표시될 영역 --%>
+<c:choose>
+<c:when test="${empty myboard.attachFileList }">
+	<li>첨부파일이 없습니다.</li>
+</c:when>
+<c:otherwise>
+	<c:forEach var="attachFile" items="${myboard.attachFileList}">
+		<c:choose>
+		<c:when test='${attachFile.fileType == "F"}'>
+		<li class="attachLi" 
+			data-repopath="${attachFile.repoPath}"
+			data-uploadpath="${attachFile.uploadPath}"
+		    data-uuid="${attachFile.uuid}"
+		    data-filename="${attachFile.fileName }"
+		    data-filetype="F">
+		        <img src='${contextPath}/resources/img/icon-attach.png' style='width:25px;'>
+		        &nbsp;&nbsp; ${attachFile.fileName}
+		    </a>
+		</li>
+		</c:when>
+		<c:otherwise>
+		    <c:set var="thumbnail" value="${attachFile.repoPath}/${attachFile.uploadPath}/s_${attachFile.uuid}_${attachFile.fileName}"/>
+		    <li class="attachLi" 
+		    	data-repopath="${attachFile.repoPath}"
+		        data-uploadpath = "${attachFile.uploadPath }" 
+		        data-uuid = "${attachFile.uuid }" 
+		        data-filename = "${attachFile.fileName }" 
+		        data-filetype = "I" >
+		            <img src='${contextPath}/displayThumbnail?fileName=${thumbnail}' style='width:25px;'>
+		            &nbsp;&nbsp;${attachFile.fileName}
+		        </a> 
+		    </li>
+		    <c:remove var="thumbnail"/>
+		</c:otherwise>
+		</c:choose>
+	</c:forEach>
+</c:otherwise>
+</c:choose>
+                	</ul>
+            	</div>
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+    </div><!-- /.col-lg-12 -->
+</div><!-- /.row -->
+
+<%-- Modal:첨부파일 이미지 표시 --%>
+<div class="modal fade" id="attachModal" tabindex="-1" role="dialog" aria-labelledby="attachModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id="attachModal-body">
+            	<%-- 이미지표시 --%>
+            </div>
+            
+        </div><%-- /.modal-content --%>
+    </div><%-- /.modal-dialog --%>
+</div><%-- /.modal --%>
 
 
 <div class="row">
@@ -109,9 +180,10 @@
 						<span>댓글&nbsp;<c:out value="${board.breplyCnt}"/>개</span> --%>
 						<span id="replyTotal"></span>
 						<span>&nbsp;</span>
-						
+
+<sec:authorize access="isAuthenticated()">			
 						<button type="button" id="btnChgCmtReg" class="btn btn-info btn-sm">댓글 작성</button>
-						
+</sec:authorize>						
 						<button type="button" id="btnRegCmt" class="btn btn-warning btn-sm"
 								style="display:none">댓글 등록</button>
 						<button type="button" id="btnCancelRegCmt" class="btn btn-warning btn-sm"
@@ -120,16 +192,19 @@
 					</strong>
 				</p>
 			</div> <%-- /.panel-heading --%>
-			<div class="panel-body">
+		<div class="panel-body">
+		
+<%-- 댓글 입력창 div 시작 --%>
+<sec:authorize access="isAuthenticated()">
+<div class="form-group" style="margin-bottom: 5px;">
+	<textarea class="form-control txtBoxCmt" name="rcontent"
+			  placeholder="댓글작성을 원하시면,&#10;댓글 작성 버튼을 클릭해주세요."
+			  readonly="readonly"
+			 ></textarea>
+</div>
+</sec:authorize>
 
-			<%-- 댓글 입력창 div 시작 --%>
-				<div class="form-group" style="margin-bottom: 5px;">
-					<textarea class="form-control txtBoxCmt" name="rcontent"
-							  placeholder="댓글작성을 원하시면,&#10;댓글 작성 버튼을 클릭해주세요."
-							  readonly="readonly"
-							 ></textarea>
-				</div>
-				<hr style="margin-top: 10px; margin-bottom: 10px;"><%-- 댓글 입력창 div 끝 --%>
+<hr style="margin-top: 10px; margin-bottom: 10px;"><%-- 댓글 입력창 div 끝 --%>
 
 				
 
@@ -206,7 +281,6 @@ $("#btnToList").on("click", function(){
 
 	frmSendValue.attr("action", "${contextPath}/myboard/list").attr("method", "get") ;
 	frmSendValue.submit() ;
-	frmSendValue.find('input[name="bno"]').remove();
 });
 
 //게시물 수정-삭제 페이지 이동
@@ -218,7 +292,6 @@ $("#btnToModify").on("click", function(){
 	frmSendValue.append("<input type='hidden' name='bno' value='" + bno + "'/>") ;
 	frmSendValue.attr("action", "${contextPath}/myboard/modify").attr("method", "get") ;
 	frmSendValue.submit() ;
-	frmSendValue.find('input[name="bno"]').remove();
 });
 
 
@@ -244,6 +317,33 @@ function runModal(result) {
 	myMsg = "" ;
 }
 </script>
+
+
+<%-- 첨부파일 이미지 표시 --%>
+<script>
+$(".attachLi").on("click", function(){
+	var objLi = $(this) ;
+	var myFileName = objLi.data("repopath") + "/" + objLi.data("uploadpath") + "/" 
+				   + objLi.data("uuid") + "_" + objLi.data("filename");
+	
+	if(objLi.data("filetype")=="I"){
+		$("#attachModal-body").html("<img src='${contextPath}/fileDownloadAjax?fileName=" + encodeURI(myFileName) + "' style='width:80%' >");
+		
+		$("#attachModal").modal("show");
+	}else{
+		self.location="${contextPath}/fileDownloadAjax?fileName=" + encodeURI(myFileName) ;
+	}
+	
+})
+
+<%-- 표시된 이미지 모달 감추기 --%>
+$("#attachModal").on("click", function(){
+	$(this).modal("hide");
+})
+
+</script>
+
+<%-- 댓글/답글 자바스크립트 시작 --%>
 <script src="${contextPath }/resources/js/mycomment.js"></script>
 <script>
 
@@ -393,7 +493,6 @@ function showCmtList(pageNum){
 				str += '<div style="padding-left: 100px;">' ;
 						
 					}
-					
 				<%-- 답글에 대한 아이콘 표시  --%>	
 				if(myReplyPagingCreator.myreplyList[i].lvl > 1) {
 				str += '    <i class="fa fa-reply fa-fw"></i>&nbsp;';
@@ -405,9 +504,10 @@ function showCmtList(pageNum){
 				    + '        <small class="text-muted">' 
 				    +              myReplyClsr.myDateTimeFmt(myReplyPagingCreator.myreplyList[i].rmodDate) 
 				    + '        </small>'
-				    + '    </span>'
-				    + '    <p class="rcontent-p" style="white-space:pre-wrap;" '
-				    + '		  data-bno="' + myReplyPagingCreator.myreplyList[i].bno + '"' 
+				    + '    </span>'<%-- 
+				    + '    <p style="white-space:pre-wrap;" data-bno="' + myReplyPagingCreator.myreplyList[i].bno + '"' --%> 
+				    + '    <p class="rcontent-p" style="white-space:pre-wrap;"'
+				    + '       data-bno="' + myReplyPagingCreator.myreplyList[i].bno + '"'
 				    + '       data-rno="' + myReplyPagingCreator.myreplyList[i].rno + '">'
 				    +         myReplyPagingCreator.myreplyList[i].rcontent + '</p>'
 				    + '</div>'
@@ -474,17 +574,19 @@ $("#btnRegCmt").on("click", function(){
 	
 });
 
-<%-- 댓글 작성 버튼 클릭 후 취소 버튼 처리 --%>
-$("#btnCancelRegCmt").on("click", function(){
-	$(this).attr("style", "display:none;") ;
+<%-- 댓글 등록 "취소" 버튼 클릭 처리 --%>
+$("#btnCancelRegCmt").on("click", "", function(){
 	$("#btnChgCmtReg").attr("style", "display:in-block;") ;
 	$("#btnRegCmt").attr("style", "display:none") ;
-	$(".txtBoxCmt").attr("readonly", true) ;
-})
+	$("#btnCancelRegCmt").attr("style", "display:none;") ;
+	$(".txtBoxCmt").val("").attr("readonly", true)  ;
+	
+	
+});
 
 <%--답글 작성 버튼 클릭 처리:이벤트 전파
    #chat > li:nth-child(1) > button  --%>
-$("#chat").on("click", "li .btnChgReplyReg" , function(){
+$("#chat").on("click","li .btnChgReplyReg" , function(){
 	
 	var strTxtBoxReply =
 		  "<textarea class='form-control txtBoxReply' name='rcontent' style='margin-bottom:10px;'"
@@ -498,6 +600,9 @@ $("#chat").on("click", "li .btnChgReplyReg" , function(){
 	$(this).attr("style", "display:none;")
 		
 });
+
+
+
 
 <%-- 답글 등록 버튼 클릭 처리: 이벤트 전파 
 #chat > li:nth-child(1) > button.btn.btn-warning.btn-xs.btnRegReply  --%>
@@ -516,64 +621,126 @@ $("#chat").on("click", "li .btnRegReply", function(){
 				var pageNum = frmCmtPagingValue.find('input[name="pageNum"]').val() ;
 				showCmtList(pageNum) ;
 			}
+			
+	
 	);
 	
 });
 
-<%-- 답글 작성 버튼 클릭 후 취소 버튼 처리 --%>
-<%-- #chat > li:nth-child(1) > div > button.btn.btn-danger.btn-xs.btnCancelRegReply --%>
-$("#chat").on("click", "li .btnCancelRegReply", function(){
-	<%--
-	var replyCancelTxt = '<button type="button" style="display:in-block"'
-					   +  'class="btn btn-primary btn-xs btnChgReg">답글 작성</button>'
-	$(this).after(replyCancelTxt)
-	$(this).attr("style", "display:none;")--%>
-	
-	$(".btnRegReply").remove();
-	$(".btnCancelRegReply").remove();
-	$(".txtBoxReply").remove();
-	$(".btnChgReplyReg").attr("style", "display:in-block");
-	
-})
 
-<%-- 댓글/답글 수정 화면 표시 : 이벤트 전파
-#chat > li:nth-child(1) > div > p--%>
-$("#chat").on("click", "li div p", function(){
+<%-- 답글 등록 취소 버튼 클릭 처리: 이벤트 전파 --%>
+
+<%-- #chat > li:nth-child(1) > button.btn.btn-danger.btn-xs.btnCancelRegReply--%><%--
+$(".btnCancelRegReply").on("click", function(){--%>
+$("#chat").on("click", "li .btnCancelRegReply", function(){
+	$(".btnRegReply").remove() ;
+	$(".btnCancelRegReply").remove() ;
+	$(".txtBoxReply").remove() ;
+	$(".btnChgReplyReg").attr("style", "display: in-block;") ;
+});
+
+
+<%-- 댓글/답글 수정: 글내용이 표시된 p를 클릭 시 입력창, 수정, 삭제, 취소 버튼 화면 표시,  --%>
+<%-- #chat > li:nth-child(1) > div > p --%>
+//$(".rcontent-p").on("click", function(){  //동작하지 않음
+$("#chat").on("click","li div p", function(){ <%-- 이벤트전파 --%>
+	//textarea, 수정버튼, 삭제버튼, 취소버튼
+	//textarea에 기존 값이 표시되고, 수정거친 후 ajax로 전송
+	//답글작성 버튼 감추기
 	
-	$(this).parents("li").find(".btnChgReplyReg").attr("style", "display:none");
+	$(this).parents("li").find(".btnChgReplyReg").attr("style", "display:none") ;
 	
-	var rcontent = $(this).text();
+	
+	var rcontent = $(this).text() ;
+		
 	
 	var strTxtBoxReply =
-	     "<textarea class='form-control txtBoxMod' name='rcontent' style='margin-bottom:10px;'"
-	   + "         ></textarea>"
-	   + "<button type='button' class='btn btn-warning btn-sm btnModCmt'>수정</button> "
-	   + "<button type='button' class='btn btn-danger btn-sm btnDelCmt'>삭제</button>"
-	   + "<button type='button' class='btn btn-info btn-sm btnCancelCmt' style='margin-left: 4px;'>취소</button>";
-	   
+		  "<textarea class='form-control txtBoxMod' name='rcontent' style='margin-bottom:10px;'"
+		+ "         ></textarea>"
+		+ "<button type='button' class='btn btn-warning btn-sm btnModCmt'>수정</button> "
+		+ "<button type='button' class='btn btn-danger btn-sm btnDelCmt'>삭제</button>"
+		+ "<button type='button' class='btn btn-info btn-sm btnCancelCmt' style='margin-left: 4px;'>취소</button>";
+	
 	$(this).after(strTxtBoxReply) ;
-	$(".txtBoxMod").val(rcontent) ;
+	$(".txtBoxMod").val(rcontent);
 	$(this).attr("style", "display:none");
 	
+	<%--예, div#id1 > div#id2 > ul > li > p : $("p").closest("div") : div#id2--%>
+	<%--예, div#id1 > div#id2 > ul > li > p : $("p").parents() : div#id1, div#id2, ul, li--%>
+	<%--예, div#id1 > div#id2 > ul > li > p : $("p").parents("div") : div#id1, div#id2--%>
+	<%--예, div#id1 > div#id2 > ul > li > p : $("p").parent() : li--%>
 	
-})
+	
+	//잘못된 코드: $(this).closest(button): 선택된 p를 기준으로 p의 조상들(부모 포함) 중에 가장 가까운 button 을 찾음
+//	$(this).closest("button").attr("style", "display:none") ; 
 
+}) ;
+
+<%-- 댓글-답글 수정 --%>
+<%-- #chat > li:nth-child(1) > div > button.btn.btn-warning.btn-sm.btnModCmt --%>
 $("#chat").on("click", "li div button.btnModCmt", function(){
 	
-	var rcontent = $(this).prev().val();
-
-	var rno = $(this).siblings("p").data("rno");
-	var cmtReply = {bno: bnoValue, rno: rno, rcontent: rcontent};
+	var rcontent = $(this).prev().val() ;
+	var rno = $(this).siblings("p").data("rno") ;
+	
+	var cmtReply = {bno: bnoValue, rno: rno, rcontent: rcontent} ;
 	
 	myReplyClsr.modifyCmtReply(
-		cmtReply,
-		function(result){
-			var _pageNum = frmCmtPagingValue.find("input[name='pageNum']").val();
-			showCmtList(_pageNum);
-		}
-	)
+			cmtReply,
+			function(result){
+				alert("댓글(답글)이 수정되었습니다.") ;
+				var _pageNum = frmCmtPagingValue.find("input[name='pageNum']").val() ;
+				showCmtList(_pageNum) ;
+				
+			}
+	
+	);
+});
 
-})
+	
+<%-- 댓글-답글 삭제 --%>
+<%-- #chat > li:nth-child(1) > div > button.btn.btn-danger.btn-sm.btnDelCmt --%>
+$("#chat").on("click","li div button.btnDelCmt", function(){
+	if(!confirm("삭제하시겠습니까?")){
+		return ;
+	}
+	
+//	var rno = $(this).parents("li.commentLi").data("rno");
+	var rno = $(this).closest("li.commentLi").data("rno") ;
+	
+	var bnoAndRno ={bno: bnoValue, rno: rno} ;
+	
+	myReplyClsr.removeCmtReply(
+			bnoAndRno,
+			function(){
+				alert("글이 삭제되었습니다.") ;
+				
+				var _pageNum = frmCmtPagingValue.find("input[name='pageNum']").val() ;
+				showCmtList(_pageNum) ;
+			}
+	);
+	
+});
+
+<%-- 댓글-답글 수정 취소 --%>
+<%-- #chat > li:nth-child(1) > div > button.btn.btn-info.btn-sm.btnCancelCmt --%>
+$("#chat").on("click","li div button.btnCancelCmt", function(){
+
+	<%--서버로 요청이 값--%>
+//	var _pageNum = frmCmtPagingValue.find("input[name='pageNum']").val() ;
+//	showCmtList(_pageNum) ;
+	
+	<%--브라우저에서 처리(서버 요청 없음)--%>
+	$(this).parents("li").find("p").attr("style", "display:in-block;white-space:pre-wrap;") ;
+	$(this).parents("li").find("button.btnChgReplyReg").attr("style","in-block" );
+
+	$(this).siblings(".btnModCmt").remove();
+	$(this).siblings(".btnDelCmt").remove();
+	$(this).siblings(".txtBoxMod").remove();
+	$(this).remove() ;
+	
+});
+
 
 </script>
 
@@ -588,7 +755,11 @@ $(document).ready(function(){
 
 <%@include file="../myinclude/myfooter.jsp" %>   
 
-
+<%-- 
+//$(".btnModCmt").remove() ;
+//$(".btnDelCmt").remove() ;
+//$(".btnCancelCmt").remove() ;
+//$(".txtBoxMod").remove() ; --%>
 
 
 <%-- mycomment.js 클로저 메서드 테스트 코드 --%>

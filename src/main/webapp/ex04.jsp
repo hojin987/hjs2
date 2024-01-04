@@ -7,9 +7,10 @@
 <title>ex04.jsp</title>
 </head>
 <body>
-	<h2>page: ${param.page }</h2>
+	<h1>webapp/ex04.jsp</h1>
 	<h2>name: ${param.name }</h2>
 	<h2>age: ${param.age }</h2>
+	<h2>page: ${param.page }</h2>
 
 
 </body>

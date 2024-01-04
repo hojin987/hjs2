@@ -5,10 +5,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import com.spring5.mypro00.domain.MyMemberVO;
+import com.spring5.mypro00.mapper.MyMemberMapper;
 
 //import com.spring5.mypro00.domain.MyMemberVO;
 //import com.spring5.mypro00.mapper.MyMemberMapper;
@@ -19,7 +23,7 @@ import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration      //폴더 구분자로 \\ 사용 시 오류 발생. /를 사용하세요.
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/mybatis-context.xml" ,
+@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/mybatis-contextDEV.xml" ,
                        "file:src/main/webapp/WEB-INF/spring/security-context.xml" ,
                        "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
 @Log4j
@@ -42,12 +46,16 @@ public class MyMemberMapperTests {
 //        for(int i = 0; i < 100; i++) {
 //
 //        	member.setUserPw(pwencoder.encode("pw" + i));
-//
-//            if(i < 80) {
+
+//            if(i <= 70) {
 //            	member.setUserId("user" + i);
 //            	member.setUserName("일반사용자" + i);
 //            
-//            } else if (i < 90) {
+//            } else if (i <= 80) {
+//            	member.setUserId("member" + i);
+//            	member.setUserName("중급사용자" + i);
+//                
+//            } else if (i <= 90) {
 //            	member.setUserId("manager" + i);
 //            	member.setUserName("운영자" + i);
 //                
@@ -69,34 +77,38 @@ public class MyMemberMapperTests {
 //        
 //        for(int i = 0; i < 100; i++) {
 //
-//            if(i < 80) {
+//            if(i <= 70) {
 //                myAuthority.setUserId("user" + i);
 //                myAuthority.setAuthority("ROLE_USER");
 //                
-//            } else if (i < 90) {
+//            } else if (i <= 80) {
+//                myAuthority.setUserId("member" + i);
+//                myAuthority.setAuthority("ROLE_MEMBER");
+//                
+//            } else if (i <= 90) {
 //                myAuthority.setUserId("manager" + i);
 //                myAuthority.setAuthority("ROLE_MANAGER");
 //                
 //            } else {
 //                myAuthority.setUserId("admin" + i);
-//                myAuthority.setAuthority("ROLE_ADMIN");
+//                myAuthority.setAuthority("ADMIN");
 //                
 //            }
 //            log.info(myAuthority);
-//            myMemberMapper.insertMyAuthority(myAuthority) ;
+//            myMemberMapper.insertMyMemAuthority(myAuthority) ;
 //        } //for-End
 //        
 //        myAuthority.setUserId("admin99");
 //        myAuthority.setAuthority("ROLE_MANAGER");
-//        myMemberMapper.insertMyAuthority(myAuthority);
+//        myMemberMapper.insertMyMemAuthority(myAuthority);
 //        
 //        myAuthority.setUserId("admin99");
-//        myAuthority.setAuthority("ROLE_USER");
-//        myMemberMapper.insertMyAuthority(myAuthority);
+//        myAuthority.setAuthority("ROLE_MEMBER");
+//        myMemberMapper.insertMyMemAuthority(myAuthority);
 //        
 //        myAuthority.setUserId("admin91");
 //        myAuthority.setAuthority("ROLE_MANAGER");
-//        myMemberMapper.insertMyAuthority(myAuthority);
+//        myMemberMapper.insertMyMemAuthority(myAuthority);
 //    }
 //    
     //회원 정보 조회 테스트: 테스트(3) 

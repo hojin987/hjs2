@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring5.mypro00.mapper.MyBoardAttachFileMapper">
+
+<!-- 특정 게시물의 모든 첨부파일 조회 -->
+	<select id="selectAttachFiles" resultType="com.spring5.mypro00.domain.MyBoardAttachFileVO">
+		SELECT uuid, uploadPath, fileName, fileType, bno
+		FROM book_ex.tbl_myAttachFiles
+		WHERE bno = #{bno}
+	</select>
+
+<!-- 첨부파일 추가 -->
+	<insert id="insertAttachFile">
+		INSERT INTO book_ex.tbl_myattachFiles
+		VALUES (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{bno})
+	</insert>
+	
+<!-- 특정 첨부파일 삭제 -->
+	<delete id="deleteAttachFile">
+		DELETE FROM book_ex.tbl_myAttachFiles
+		WHERE uuid = #{uuid} 
+	</delete>
+	
+<!-- 특정 게시물의 모든 첨부파일 삭제 -->
+	<delete id="deleteAttachFiles">
+		DELETE book_ex.tbl_myAttachFiles
+		WHERE bno = #{bno}
+	</delete>
+</mapper>

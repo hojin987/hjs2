@@ -9,6 +9,7 @@
 	<configs>
 		<config>src/main/webapp/WEB-INF/spring/mybatis-context.xml</config>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/sample-context.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/security-context.xml</config>
 	</configs>
 	<autoconfigs>
 		<config>src/main/webapp/WEB-INF/spring/mybatis-contextDEV.xml</config>

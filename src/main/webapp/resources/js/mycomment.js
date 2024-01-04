@@ -190,7 +190,7 @@ var myReplyClsr = (function(){
     function myDateTimeFmt(datetimeValue) {
         
         var myDate = new Date(datetimeValue) ;
-        console.log("myDate: " + myDate) ;
+//        console.log("myDate: " + myDate) ;
 
         var myDateTime = "" ;
 
@@ -211,7 +211,7 @@ var myReplyClsr = (function(){
 
     } //myDateTimeFmt-end
 
-    return {
+    return {//myReplyClsr
         getCmtList: getCmtList ,
         registerCmt: registerCmt ,
         registerReply: registerReply ,

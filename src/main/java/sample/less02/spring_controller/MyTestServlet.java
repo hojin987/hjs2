@@ -7,14 +7,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/myTest")
+@WebServlet("/myTest")  //스프링이 아니라 톰캣의 제어를 받음
 public class MyTestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		System.out.println("나는 MyTestServlet의 doGet 메서드입니다.");
-		
+		System.out.println("나는 MyTestServlet의 doGet메서드입니다.....");
 	}
 
 }

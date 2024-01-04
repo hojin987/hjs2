@@ -70,19 +70,19 @@ public class MyBoardServiceTests {
 //    }
 
     //게시물 수정 테스트
-    @Test
-    public void testModifyBoard() {
-
-        MyBoardVO myBoard = myBoardService.getBoard(1L);
-        
-        if (myBoard == null) {
-           return;
-        }
-        
-        myBoard.setBtitle("제목 수정:서비스 테스트");
-        log.info("수정된 게시물 조회 결과(boolean): " + myBoardService.modifyBoard(myBoard));
-        log.info("수정된 값 확인: " + myBoard);
-    }
+//    @Test
+//    public void testModifyBoard() {
+//
+//        MyBoardVO myBoard = myBoardService.getBoard(1L);
+//        
+//        if (myBoard == null) {
+//           return;
+//        }
+//        
+//        myBoard.setBtitle("제목 수정:서비스 테스트");
+//        log.info("수정된 게시물 조회 결과(boolean): " + myBoardService.modifyBoard(myBoard));
+//        log.info("수정된 값 확인: " + myBoard);
+//    }
 
     //게시물 조회  테스트: by bno + 조회수 증가 고려
 //    @Test

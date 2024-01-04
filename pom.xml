@@ -9,9 +9,10 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.8</java-version>
-		<org.springframework-version>5.2.25.RELEASE</org.springframework-version>
+		<org.springframework-version>5.2.19.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.9.20</org.aspectj-version>
 		<org.slf4j-version>2.0.9</org.slf4j-version>
+		<org.springsecurity-version>5.4.11</org.springsecurity-version>
 	</properties>
 	<dependencies>
 		<!-- <dependency>
@@ -20,14 +21,55 @@
 			 <version>3.1.0</version>
  		</dependency> -->
  		
+ 		<!-- 새로추가: spring-security-core -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>${org.springsecurity-version}</version>
+		</dependency>
+		
+		<!-- 새로추가: spring-security-web -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-web</artifactId>
+		    <version>${org.springsecurity-version}</version>
+		</dependency>
+		
+		<!-- 새로추가: spring-security-config -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-config</artifactId>
+		    <version>${org.springsecurity-version}</version>
+		</dependency>
+		
+		<!-- 새로추가: spring-security-taglibs -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-taglibs</artifactId>
+		    <version>${org.springsecurity-version}</version>
+		</dependency>
+		
+		<!-- 새로추가: spring-security-acl -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-acl</artifactId>
+		    <version>${org.springsecurity-version}</version>
+		</dependency>
  		
+ 		<!-- 새로추가: thumbnailator -->
+ 		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.20</version>
+		</dependency>
+ 		
+ 		<!-- 새로추가: commons-fileupload-->
  		<dependency>
 		    <groupId>commons-fileupload</groupId>
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>1.5</version>
 		</dependency>
- 		
- 		
+		
  		<!-- 새로 추가: gson -->
  		<dependency>
 		    <groupId>com.google.code.gson</groupId>
@@ -153,6 +195,13 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
+		</dependency>
+		
+		<!-- AspectJweaver -->
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>${org.aspectj-version}</version>
 		</dependency>	
 		
 		<!-- Logging -->

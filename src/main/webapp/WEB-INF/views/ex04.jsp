@@ -19,8 +19,8 @@
 	<h2>name: ${name }</h2>
 	<h2>age: ${age }</h2>
 	<%-- <h2>page: ${page[0] }</h2> --%>
-	
-	<%-- <h2>ArrayList를 통해 전달된 myIds</h2>
+	<%-- 
+	<h2>ArrayList를 통해 전달된 myIds</h2>
 	<h2>myIds[0]: ${myIds[0] }</h2>
 	<h2>myIds[1]: ${myIds[1] }</h2>
 	<h2>myIds[2]: ${myIds[2] }</h2> --%>
