@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.User;
 
 import com.spring5.mypro00.domain.MyMemberVO;
 
+import lombok.extern.log4j.Log4j;
+
 public class MyMemberUser extends User{
 	
 	private MyMemberVO mymember ;

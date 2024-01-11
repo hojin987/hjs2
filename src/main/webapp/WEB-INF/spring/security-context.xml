@@ -51,7 +51,7 @@
 					     password-parameter="password"
 					     />
 	
-	<security:logout logout-url="/myLogoutProcess" logout-success-url="/"/>
+	<security:logout logout-url="/myLogoutProcess" logout-success-url="/" />
 	
 	<!-- 스프링 시큐리티 자동로그인: 1주일 유지 -->
 	<!-- Referenced bean 'dataSource' not found 경고는 무시(mybatis-context.xml에 정의되어 있음) -->
